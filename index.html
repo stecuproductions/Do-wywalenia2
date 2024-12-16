@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 4</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <style>
+        body{
+            font-family:"Montserrat";
+            background-color: #c4e3ed;
+            padding: 10px;
+        }
+		.div22{
+			display: flex;
+			flex-direction: column;
+		}
+		.div22 img{
+			width:50%;
+		}
+    </style>
+</head>
+<body>
+	
+    <h1>Theoretical part</h1>
+    <h2>DNS system</h2>
+	<h3>1.1.1. Top Level Domains</h3>
+	<ul>
+		<li><strong>Generic TLDs (gTLDs)</strong></br>Serve broad or general purposes</br><strong>Examples:</strong> .com, .org, .net, .info, etc.</li>
+		<li><strong>Country Code TLDs (ccTLDs)</strong></br>Tied to specific countries</br><strong>Exampled:</strong> .us (United States), .uk (United Kingdom), .de (Germany), .pl (Poland)</li>
+		<li><strong>Sponsored TLDs (sTLDs)</strong></br>Managed by organizations with sepcific purposes</br><strong>Examples:</strong>.gov, .edu, .mil, .int, .aero</li>
+		<li><strong>Infrastructure TLD</strong></br>Reserved for technical infrastructure functions of the internet</br>.arpa - used for reverse DNS lookups</li>
+	</ul>
+	<h3>1.1.2. Hierarhical structure of Domain Name System (DNS), TLDs, DNS queiries, DNS delegation</h3>
+	<p>The Domain Name System operates as decentralized, hirarchical naming system with the following key layers:</p>
+	<ol>
+		<li><strong>Root Zone</strong></br>Technically it doesn't have a name, it is refferred to as an empty string "" as it serves as the starting point for all domain lookups</br>Primary directory where all other directories reside - it is the parent folder of the top level domain and all its contents</li>
+		</li>
+		<li><strong>Top Level Domains</strong></br>Represent the first  partition after the root, they help classify websites based on their purposes, ownership or geographical origin, e.g. .com or .org</li>
+		<li><strong>Second Level Domain</strong></br>Website's name, e.g in www.example.com, example is the second level domain</li>
+		<li><strong>Subdomains</strong></br>Subset of a specific website - allows to categorize website into one or more sections, e.g. www in www.example.com or mail in mail.example.com</li>
+	</ol>
+	<p><strong>DNS queries</strong></br>Requests made to the DNS to resolve domain names into IP addresses (or vice versa) so that devices can locate and communicate with each other over the internet</p>
+	<ul>
+		<li><strong>Recursive query</strong></br>DNS client (usually device or browser) asks the DNS server to find the IP address associated with a domain name, the server will make additional queries if needed to resolve the request fully, it is expected to reurn the IP or an error if it cannot resolve the name</li>
+		<li><strong>Iterative query</strong></br>DNS client asks a DNS server for the best information it has, if the server doesn't know the answwer it may return the address of another DNS server which might have the answer - it doesn't necessarily have to fully resolve the query but it provides the next step to the client to continue the process</li>
+		<li><strong>Reverse query</strong></br>Used to look up a domain name from an IP address, typically done using .arpa domain</li>
+	</ul>
+	<p><strong>DNS delegation</strong></br>Process by which administrative control over a domain is passed down the hierarchy</br>It allows organizations to divide their DNS zones into smaller, mire manageable parts and delegate authority to different groups or individuals</br>Example: The root DNS servers delegate authority over TLD zones to TLD DNS servers which in turn delegate authority to domain name servers</p>
+	<h3>1.1.3. DNS record, DNS, reverse DNS</h3>
+	<ul>
+		<li><strong>DNS record</strong></br>Data entries stored in DNS servers that map domain names to IP addresses or services. Common records include:</p>
+		<ul>
+			<li><b>A</b> - maps a domain to an IPv6 address</li>
+			<li><b>AAAA</b> - maps a domain to an IPv6 address</li>
+			<li><b>CNAME</b> - maps a domain to another domain (aliasing)</li>
+			<li><b>PTR</b> - reverse DNS mapping (IP address to domain name)</li>
+			<li><b>MX</b> - specify mail servers responsible for email for a domain</li>
+			<li><b>TXT</b> - stores arbitrary text data, e.g. SPF records</li>
+			<li><b>NS</b> - specify authoritative name servers for a domain</li>
+		</ul>
+		<p><b>DNS</b> is responsible for translating human-readable domain names into IP addresses that computers use to locate each other on the network</p>
+		<ul>
+			<li>User enter a domain name into a web browser</li>
+			<li>The request goes to DNS reosolver</li>
+			<li>A DNS query is sent to a DNS server to ask for the corresponding IP address</li>
+			<li>The DNS server check its records and if it knows the IP address it sends it back to the user's device</li>
+			<li>The device can use the IP address to connect to the server where the website or service is hosted and display the content</li>
+		</ul>
+		<p><b>Reverse DNS</b> is the process of mapping addresses back to domain names (performed using PTR records). It is typically used for network troubleshooting, security, and email verification</p>
+	<h3>1.1.4. Authoritative answer, non authoritative answer</h3>
+	<ul>
+		<li><b>Authoritative answer</b>: provided directly by the server responsible for the queried domain - it comes from an authoritative name server which is specifically configured to manage DNS record for that domain</li>
+		<li><b>Non-authoritative answer</b>: relayed by caching or intermediate DNS servers not holding original data - provided by a DNS server that is not authoritative for the domain but has the answer stored in its cache (DNS servers often cache DNS responses to reduce query times and network load)</li>
+	</ul>
+	<h3>1.1.5. DNS resolver, DNS cache, file: /etc/hosts</h3>
+	<ul>
+		<li><b>DNS resolver</b> - a client-side application that queries DNS servers to resolve domain names</li>
+		<li><b>DNS cache</b> - temporary storage area where previously resolved DNS queries results are saved (e.g. IP addresses associated with domain names) temporarily to speed up subsequent lookups</li>
+		<li><b>/etc/hosts file</b> - a local file for static domain name to IP mapping bypassing DNS for defined entries (computer checks this file before contacting the DNS server - if the domain is found in the file, the corresponding IP address is used without making a DNS query)</li>
+	</ul>
+	<h2>Mail System</h2>
+	<h3>1.2.1. Protocols</h3>
+	<ol>
+		<li><b>SMPT (Simple Mail Transfer Protocol)</b>
+			<ul>
+				<li>Used for sending emails between servers or clients</li>
+				<li>Operates on port 25 (or 587 for secure connections)</li>
+				<li>
+					<ol>
+						<li>Client establishes a connection with the SMPT server</li>
+						<li>Client sends the email with <i>MAIL FROM, RCPT TO, DATA</i></li>
+						<li>The server delivers the email to the recipient's mail server</li>
+						<li>The connection is cosed with QUIT</li>
+					</ol>
+				</li>
+				<li>Commands
+					<ul>
+						<li><i>HELO</i> - introduces the client to the server</li>
+						<li><i>MAIL FROM</i> - specifies the sender's email address</li>
+						<li><i>RCPT TO</i> - specifies the recipient's email address</li>
+						<li><i>DATA</i> - sends the email body</li>
+						<li><i>QUIT</i> - ends the session</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li><b>POP3 (Post Office Protocol v3)</b>
+			<ul>
+				<li>Used to retrieve emails from a mail server and download them to the client's device</li>
+				<li>Once downloaded, emails are typically removed from the server making them unavailable for other devices</li>
+				<li>Operates on port 110 (or 995 for secure connections)</li>
+				<li>
+					<ol>
+						<li>The client connects to the POP3 server</li>
+						<li>The client authenticates using <i>USER</i> and <i>PASS</i></li>
+						<li>The client retriebves a list of available messages with <i>LIST</i></li>
+						<li>Individual emails can be downloaded using <i>RETR</i></li>
+						<li>The client may delete emails from the server using <i>DELE</i></li>
+						<li>The session ends with <i>QUIT</i></li>
+					</ol>
+				</li>
+				<li>Commands
+					<ul>
+						<li><i>USER</i> - sends username to authenticate the client</li>
+						<li><i>PASS</i> - sends the password to authenticate the client</li>
+						<li><i>LIST</i> - lists all available messages on the server</li>
+						<li><i>RETR</i> - retrieves a specific email message</li>
+						<li><i>DELE</i> - marks a message for deletion after the session ends</li>
+						<li><i>QUIT</i> - ends the session</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li><b>IMAP (Internet Message Access Protocol)</b>
+			<ul>
+				<li>Allows clients to access and manage emails directly on the server</li>
+				<li>Emails are not downloaded by default which enables synchronization across multiple devices</li>
+				<li>Multiple clients can access the same account and changes are synchronized in real-time</li>
+				<li>Operates on port 143 (or 993 for secure connections)</li>
+				<li>
+					<ol>
+						<li>The client connects to IMAP server</li>
+						<li>The client authenticates using <i>LOGIN</i></li>
+						<li>The client selects a mailbox using <i>SELECT</i></li>
+						<li>The client fetches emails or header using <i>FETCH</i></li>
+						<li>Messages can be marked, moved or deleted with <i>STORE</i> commands</li>
+						<li>If deletions are confirmed, the clients sends <i>EXPUNGE</i></li>
+						<li>The session ends with <i>LOGOUT</i></li>
+					</ol>
+				</li>
+				<li>Commands
+					<ul>
+						<li><i>LOGIN</i> - authenticates the user with the server</li>
+						<li><i>SELECT</i> - opens a specific mailbox</li>
+						<li><i>FETCH</i> - retrieves emails or parts of emails (e.g. headers, body)</li>
+						<li><i>STORE</i> - marks a message as read, deleted, etc.</li>
+						<li><i>EXPUNGE</i> - permanently removes emails marked for deletion</li>
+						<li><i>LOGOUT</i> - ends the session</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		</ol>
+			<h3>1.2.2 NNTP (Network News Transfer Protocol</h3>
+			<p>
+				NNTP is a protocol in the application layer 
+				of the ISO/OSI model used to manage 
+				discussion groups (Usenet). 
+				It allows browsing, posting, and 
+				synchronization of messages between servers. 
+				It operates on port 119 (
+				or 563 for SSL encryption). 
+				The communication is in a text format,  with basic commands like LIST (displaying groups),
+				 ARTICLE (retrieving messages), and POST (sending messages). 
+				 The protocol supports messages in a format similar to email. 
+				 Nowadays, it's less popular, but still has some niche use cases.
+			</p>
+			<h3>1.2.3 E-mail Mailbox, Parameters, Aliases, Address</h3>
+			<ul>
+				<li>
+					<b>E-mail mailbox</b>
+					<p>
+						Mailbox is the location on the mail servers where the emails sent to a particular address are stroed.
+						It works like digital inbox accessible to a particular user. For example, in email jan@example.com 
+						the mailbox belongs to jan on the server of a domain example.com
+
+					</p>
+				</li>
+				<li>
+					<b>Parameters</b>
+					<p>
+						E-mail parameters are additional settings or informations that affect the way of sending a message.
+						It includes for example: message format (html or text), attachments or server communication. 
+
+					</p>
+				</li>
+				<li>
+					<b>Allias</b>
+					<p>
+						Allias is an additional email which redirects messages to the same mailbox. For example
+						info@example.com and contact@example.com can put the upcoming messages to the same mailbox without
+						a neccesity to ceate another account.
+					</p>
+				</li>
+				<li>
+					<b>Email address</b>
+					<p>
+						An email address is a unique identifier that allows the messages to be sent to a particular person.
+						It has a following structule username@domain, for example anna.kowalska@gmail.com. In this case,
+						anna.kowalska identifies user, and the @gmail.com identifies a server, where their mailbox is located.
+					</p>
+				</li>
+			</ul>
+			<h3>1.2.4. E-mail structure: header, separator</h3>
+			<ul>
+				<li>
+					<b>Header</b>
+					<p>
+						Header is a part of the email containing metadata of the message. It contains:
+						<ul>
+							<li>From - sender address</li>
+							<li>To - recipent address</li>
+							<li>Subjetc</li>
+							<li>Date - the date of sending the message</li>
+							<li>CC/BCC additional fields enabling sending the copy of the message (CC - not hidden, BCC - hidden)</li>
+							<li>Content-Type: Content type of the message (text, html or attachemnts)</li>
+						</ul>
+					</p>
+				</li>
+				<li>
+					<b>Separator</b> 
+					<p>Separator is a special element separating header from email content. It is usually an empty line.</p>
+				</li>
+			</ul>
+			<h3>1.2.5. Attachements, e-mail coding, MIME</h3>
+			<ul>
+				<li>
+					<b>Attachments</b>
+					<p>
+						Attachments are files attached to an email, e.g images, csv files or other files which are sent from recipent to a reviever.
+					</p>
+				</li>
+				<li>
+					<b>E-mail Coding</b>
+					<p>
+						Emails are coded in such a way, that they can be sent between serwers and read by diffrent mail programs.
+						Coding applies to messages and attachments. The most commonly used coding are Base64 and quoted-printable.
+					</p>
+				</li>
+				<li>
+					<b>MIME</b>
+					<p>
+						MIME (Multipurpose Internet Mail Extensions) is a standard allowing for sending diffrent content-types 
+						in e mail messages such as text, images, files or HMTL.
+					</p>
+				</li>
+			</ul>
+			<h3>1.2.6. Mailing lists, e-mail gate</h3>
+			<ul>
+				<li>
+					<b>Mailing lists</b>
+					<p>
+						This is a tool enabling 
+						sending emails to group of recipents 
+						at the same time. They work in a following way:
+					</p>
+					<ul>
+						<li>Central List Address: A mailing list has a single email address (e.g., list@example.com). Sending an email to this address distributes it to all subscribers.</li>
+						<li>Subscription: Users must register (subscribe) to the list to receive messages.</li>
+						<li>Administration: Mailing lists can be moderated (an administrator approves messages) or open (any subscriber can send messages).</li>
+					</ul>
+				</li>
+				<li>
+					<b>E-mail gate</b>
+					<p>
+						An e-mail gate (email gateway) is a system that acts as an intermediary for email traffic between networks or
+						systems. It provides security by filtering spam, phishing, and malware, ensures compliance with data protection
+						regulations, and can encrypt or decrypt messages. Additionally, it facilitates content control and
+						 allows integration between systems using different protocols, making it essential
+						  for organizations requiring secure and regulated communication.
+					</p>
+						
+				</li>
+			</ul>
+			<h3>1.2.7. E-mail security, SSL, TLS, PGP, signature</h3>
+			<ul>
+				<li>
+					<b>E-mail security</b>
+					<p>
+						E-mail security involves measures and protocols designed to protect email communication from unauthorized access, interception, and tampering. It includes encryption, authentication, and secure access methods to ensure the confidentiality and integrity of emails.
+					</p>
+				</li>
+				<li>
+					<b>SSL (Secure Sockets Layer)</b>
+					<p>
+						SSL is an older encryption protocol used to establish a secure connection between a client and server. Although largely replaced by TLS, SSL is still referenced when discussing encrypted email connections.
+					</p>
+				</li>
+				<li>
+					<b>TLS (Transport Layer Security)</b>
+					<p>
+						TLS is the modern standard for encrypting email transmissions, ensuring that messages cannot be read or altered during transit. It is widely supported by email clients and servers.
+					</p>
+				</li>
+				<li>
+					<b>PGP (Pretty Good Privacy)</b>
+					<p>
+						PGP is an encryption method that secures email content using public and private key cryptography. It ensures that only the intended recipient can decrypt and read the email.
+					</p>
+				</li>
+				<li>
+					<b>Signature</b>
+					<p>
+						A digital signature is a cryptographic mechanism used to verify the authenticity of an email. It confirms the sender's identity and ensures that the email has not been altered after being sent.
+					</p>
+				</li>
+			</ul>
+			<h3>1.2.8. Spam, blacklists, graylists, spam filtering</h3>
+			<ul>
+				<li>
+					<b>Spam</b>
+					<p>
+						Spam refers to unwanted or unsolicited email messages, often sent in bulk for advertising or malicious purposes. It clutters inboxes and can pose security risks such as phishing or malware distribution.
+					</p>
+				</li>
+				<li>
+					<b>Blacklists</b>
+					<p>
+						Blacklists are lists of email addresses, domains, or IPs identified as sources of spam. Emails from these sources are automatically blocked or flagged as spam by email systems.
+					</p>
+				</li>
+				<li>
+					<b>Graylists</b>
+					<p>
+						Graylisting is a technique where an email from an unknown sender is temporarily rejected. Legitimate servers usually retry sending the email, while spammers often do not, reducing unwanted messages.
+					</p>
+				</li>
+				<li>
+					<b>Spam filtering</b>
+					<p>
+						Spam filtering involves analyzing incoming emails to identify and filter out spam. This can be done using techniques such as keyword detection, sender reputation checks, or machine learning algorithms.
+					</p>
+				</li>
+			</ul>
+			
+
+		
+    <h1>Practical part</h1>
+    <h2>2.1.1.     Display DNS settings on your computer using Control Panel and ipconfig. Find google DNS server and change DNS settings on your computer to use this server.</h2>
+	<ul>
+		<li><b>Displaying DNS settings using Control Panel</b></br>We open the Control Panel and go to Network and Sharing Center. We click on our network connection and go to Properties. There we click on Internet Protocol Version 4 (TCP/IPv4) and go to Properties
+		<img src="lab5_1.png" width="80%" alt=""></li>
+		<li><b>), ARTICLE (retrieving messages), and POST (sending messages). The protocol supports messages in a format similar to email. Nowadays, it's less popular, but still has some niche use casesDisplaying DNS settings using <i>ipconfig</i></b></br>In the command prompt we use <i>ipconfig /all</i>
+		<img src="lab5_2.png" width="80%" alt=""></li>
+		<li><b>Changing DNS settings to use google server</b></br>In the control panel e change Preferred DNS Server to 8.8.8.8 and Alternate DNS Server to 8.8.4.4
+		<img src="lab5_3.png" width="80%" alt="">
+		<img src="lab5_4.png" width="80%" alt=""></li>
+	</ul>
+	<h2>2.1.2.     Using dig, host, nslookup find the following information:</h2>
+	<ol>
+		<li><b>Domain names and corresponding IP addresses of computers in lodz.pl domain</b></li>
+		<img src="lab5_5.png" width="80%" alt="">
+		<img src="lab5_6.png" width="80%" alt="">
+		<li><b>A computer in Europe</b></li>
+		<img src="lab5_7.png" width="80%" alt="">
+		<img src="lab5_8.png" width="80%" alt="">
+		<img src="lab5_9.png" width="80%" alt="">
+		<li><b>A computer outside Europe</b></li>
+		<img src="lab5_10.png" width="80%" alt="">
+		<img src="lab5_11.png" width="80%" alt="">
+	</ol>
+	<h2>2.1.2.4.   Verify DNS assignment for localhost</h2>
+	<img src="lab5_12.png" width="80%" alt="">
+	<h2>2.1.2.5.   Flush dns memory on your computer using ipconfig</h2>
+	<p>We use <i>ipconfig /flushdns</i> to flush the dns memory.</p>
+	<img src="lab5_13.png" width="80%" alt="">
+	<h2>2.1.2.6.   Change the file hosts in such a way that when you enter ifeXX.com the website msn.com will display (where XX is the number of your ife group).</h2>
+	<p>We check the ip of msn.com using <i>host msn.com</i> Then we open the hosts file from <i>C:\Windows\System32\drivers\etc\hosts</i> as an administrator and add the line <i>204.79.197.219 ife08.com</i></p>
+	<img src="lab5_14.png" width="80%" alt="">
+	<img src="lab5_15.png" width="80%" alt="">
+	
+	<h2>2.2.1.     Configure Thunderbird to send and receive e-mails from studife.it.p.lodz.pl</h2>
+	<h2>2.2.2.Send an e-mail to</h2>
+	<div class="div22">
+		<h2>2.2.2.1.non-existent mail server</h2>
+		<img src="./2.2/1.png" alt="">
+		<h2>2.2.2.2.           non-existent user on an existent e-mail server</h2>
+		<img src="./2.2/2.png" alt="">
+		<h2>2.2.2.3.           a server which is not an e-mail server		</h2>
+		<img src="./2.2/3.png" alt="">
+	</div>
+	<h2>2.2.3.     Using Wireshark analyse the process of sending and receiving e-mails from Thunderbird.	</h2>
+	<div class="div22">
+		<p>Since the mails have been sent from gmail.com to outlook.com, the data has been encrypted, thus the packets SMTP IMAP and POP3 weren't registered by wireshark</p>
+		<img src="./2.2/4.png" alt="">
+	</div>
+	<h2>2.2.4.     Send and receive an e-mail connecting to a smtp and pop3 server using telnet</h2>
+	<div class="div22">
+		<img src="./ostatnie/1.png" alt="">
+		<img src="./ostatnie/2.png" alt="">
+		<img src="./ostatnie/3.png" alt="">
+	</div>
+</body>
+</html>
